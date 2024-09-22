@@ -8,6 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Content Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 </Project>
