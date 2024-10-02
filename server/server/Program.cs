@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using server.Application.Services;
+using server.Application.Services.Classes;
 
 var builder = WebApplication.CreateBuilder(args);
 

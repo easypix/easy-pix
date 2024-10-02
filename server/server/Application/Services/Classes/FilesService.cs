@@ -4,7 +4,7 @@ using server.Application.Services.Interfaces;
 using server.Domains.DTOs;
 using server.Domains.Enums;
 
-namespace server.Application.Services;
+namespace server.Application.Services.Classes;
 
 public class FilesService : IFilesService
 {

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using server.Application.Services;
+using server.Application.Services.Classes;
 using server.Domains.DTOs;
 
 namespace server.WebApi;
