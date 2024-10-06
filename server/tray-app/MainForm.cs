@@ -5,6 +5,7 @@ namespace tray_app;
 
 public partial class MainForm : Form
 {
+	private static Mutex _mutex;
 	private NotifyIcon _notifyIcon;
 	private Process _serverProcess;
 	private ToolStripMenuItem _startMenuItem;
@@ -13,11 +14,23 @@ public partial class MainForm : Form
 	public MainForm()
 	{
 		InitializeComponent();
+		
+		const string appName = "Easy-pix";
+		bool isNewInstance;
+		_mutex = new Mutex(true, appName, out isNewInstance);
+
+		if (!isNewInstance)
+		{
+			MessageBox.Show("Another instance of the application is already running.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			OnExit(null, null);
+			return;
+		}
+		
 		SetupTrayIcon();
 
 		StartWebAPI();
 	}
-
+	
 	private void SetupTrayIcon()
 	{
 		_notifyIcon = new NotifyIcon
@@ -39,6 +52,11 @@ public partial class MainForm : Form
 	{
 		StopServer();
 		_notifyIcon.Visible = false;
+		// Освобождаем мьютекс только если он был захвачен
+		if (_mutex != null && _mutex.WaitOne(0, false))
+		{
+			_mutex.ReleaseMutex();
+		}
 		Application.Exit();
 	}
 
@@ -82,11 +100,17 @@ public partial class MainForm : Form
 					{
 						FileName = serverPath,
 						WorkingDirectory = Path.GetDirectoryName(serverPath),
-						UseShellExecute = false,
-						CreateNoWindow = true  // Если не хотите показывать окно консоли
+						UseShellExecute = false, 
+						CreateNoWindow = true,  // Если не хотите показывать окно консоли
 					}
 				};
-
+				_serverProcess.EnableRaisingEvents = true;
+				_serverProcess.Exited += (sender, args) =>
+				{
+					_startMenuItem.Visible = true;
+					_stopMenuItem.Visible = false;
+				};
+				_serverProcess.StartInfo.EnvironmentVariables["PARENT_PROCESS_ID"] = $"{Process.GetCurrentProcess().Id}";
 				_serverProcess.Start();
 			}
 			catch (Exception ex)
@@ -112,14 +136,17 @@ public partial class MainForm : Form
 			}
 		}
 	}
-
 	protected override void OnLoad(EventArgs e)
 	{
 		base.OnLoad(e);
 		this.WindowState = FormWindowState.Minimized;
 		this.ShowInTaskbar = false;
 	}
-
+	protected override void OnShown(EventArgs e)
+	{
+		base.OnShown(e);
+		this.Hide();
+	}
 	[STAThread]
 	static void Main()
 	{
