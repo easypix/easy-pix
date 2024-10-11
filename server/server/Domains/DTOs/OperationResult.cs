@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using server.Domains.Enums;
 
 namespace server.Domains.DTOs;
@@ -25,7 +26,6 @@ public class OperationResult<T>
 public class OperationResult
 {
     public bool IsSuccess { get; }
-    public object Data { get; }
     public ErrorCode ErrorCode { get; }
 
     private OperationResult(bool isSuccess, ErrorCode errorCode)

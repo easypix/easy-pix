@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+message CreateFolderRequest{
+  string folder_name = 1;
+}
+message CreateFolderResponse{
+  bool is_success = 1;
+  ErrorCode error_code = 2;
+}
+message IsFolderExistRequest{
+  string folder_name = 1;
+}
+message IsFolderExistResponse{
+  bool is_exist = 1;
+  bool is_success = 2;
+  ErrorCode error_code = 3;
+}
+
+enum ErrorCode {
+  None = 0;
+  ErrorWhileCreatingDirectory = 10;
+  UnauthorizedAccessException = 11;
+  PathIsWrong = 12;
+  DirectoryNotFoundException = 13;
+}

@@ -17,6 +17,27 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\" />
+        <Protobuf Include="WebApi\Protos\**\*.proto" />
+        <Protobuf Update="WebApi\Protos\Services\files.proto">
+            <GrpcServices>Both</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0-windows\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
+    </ItemGroup>
+
+    <!--<ItemGroup>
+        <Protobuf Include="WebApi\Protos\**\*.proto" />
+    </ItemGroup>-->
+    
+    <ItemGroup>
+      <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+      <PackageReference Include="Grpc.Tools" Version="2.67.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 </Project>

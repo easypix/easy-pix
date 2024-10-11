@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using server.Application.Services.Interfaces;
 using server.Domains.DTOs;
-using server.Domains.Enums;
 
 namespace server.Application.Services.Classes;
 
@@ -33,6 +32,10 @@ public class FilesService : IFilesService
     public OperationResult CreatePersonalFolder(string folderName)
     {
         DirectoryInfo directory;
+        if (string.IsNullOrWhiteSpace(folderName))
+        {
+            return OperationResult.Failure(ErrorCode.PathIsWrong);
+        }
         try
         {
             directory = Directory.CreateDirectory(RootFolder + folderName);
@@ -68,5 +71,11 @@ public class FilesService : IFilesService
             return OperationResult.Success();
         }
         return OperationResult.Failure(ErrorCode.ErrorWhileCreatingDirectory);
+    }
+
+    public OperationResult<bool> IsFolderExist(string folderName)
+    {
+        var isExists = Directory.Exists(RootFolder + folderName);
+        return OperationResult<bool>.Success(isExists);
     }
 }

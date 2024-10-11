@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using server.Application.Services.Classes;
+using server.Application.Services.Interfaces;
+using server.WebApi.Protos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +18,11 @@ builder.Configuration.AddJsonFile("appsettings.json", true, true);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<FilesService>();
+builder.Services.AddGrpc(options => {});
 
-string? parentProcessString = Environment.GetEnvironmentVariable("PARENT_PROCESS_ID");
+builder.Services.AddScoped<IFilesService, FilesService>();
+
+/*string? parentProcessString = Environment.GetEnvironmentVariable("PARENT_PROCESS_ID");
 
 if (!int.TryParse(parentProcessString, out int parentProcessId))
 {
@@ -27,14 +31,18 @@ if (!int.TryParse(parentProcessString, out int parentProcessId))
 }
 else
 {
+    //start monitoring a parent process
     var monitor = new ParentProcessMonitor(parentProcessId);
-}
-
+}*/
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
 
 app.MapControllers();
+
+app.MapGrpcService<FilesProtoService>();
+
+app.UseHttpsRedirection();
 
 app.Run();

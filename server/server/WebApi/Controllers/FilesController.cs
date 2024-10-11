@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using server.Application.Services.Classes;
+using server.Application.Services.Interfaces;
 using server.Domains.DTOs;
 
-namespace server.WebApi;
+namespace server.WebApi.Controllers;
 
 [ApiController]
 [Route("/api/files")]
 public class FilesController : ControllerBase
 {
-    private readonly FilesService _service;
-    public FilesController(FilesService service)
+    private readonly IFilesService _service;
+    public FilesController(IFilesService service)
     {
         _service = service;
     }

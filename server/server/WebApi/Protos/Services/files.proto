@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package file_service;
+
+import "google/protobuf/empty.proto";
+import "WebApi/Protos/Messages/messages.proto";
+
+service Files {
+  rpc CreateFolder (CreateFolderRequest) returns (CreateFolderResponse);
+  rpc IsFolderExist (IsFolderExistRequest) returns (IsFolderExistResponse);
+}
+
+
+
